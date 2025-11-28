@@ -14,7 +14,7 @@ You may also notice faster loading times in some cases.
 
 ## Usage
 
-> **Important:** This tool is still a work in progress. Method 1, which handles the majority of cases, is functional, but Methods 2 and 3 are not yet fully implemented. **Always back up your save first.**
+> ## **Important:** This tool is still a work in progress. Method 1, which handles the majority of cases, is functional, but Methods 2 and 3 are not yet fully implemented. **Always back up your save first.**
 
 ### Executable
 
