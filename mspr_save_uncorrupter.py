@@ -51,6 +51,7 @@ def select_uncorruption_method():
 
     return method_choice
 
+
 def chunk_keeper(file_path, game_version, method_choice):
     # Keeps chunks from the save based on the game version and
     # uncorruption method selected. All other chunks are removed.
@@ -64,16 +65,13 @@ def chunk_keeper(file_path, game_version, method_choice):
 
     if game_version == '01.03':
         allowed_chunks.extend(["character", "speedweekend"])
-
     if method_choice == '1':
         allowed_chunks.extend(["audio", "gui", "loading", "tutorial"])
-
     if game_version == '01.03' and method_choice == '1':
         allowed_chunks.append("microbadges")
 
     with open(file_path, 'r') as file:
         lines = file.readlines()
-
     with open(file_path, 'w') as file:
         keep_chunk = True
         for line in lines:
@@ -91,6 +89,146 @@ def chunk_keeper(file_path, game_version, method_choice):
             elif keep_chunk:
                 file.write(line)
 
+
+def key_remover_base(file_path, game_version, method_choice):
+    allowed_key_snippets = ["livery.racetruck00", "livery.rallycar00"]
+    chunk_name = 'vehiclelams'
+
+    # Chunk name and allowed key snippets combinations. Starts off as a
+    # base list with the essential keys - equivalent to a 01.00 save
+    # with uncorruption method 3 selected.
+    allowed_key_snippets_base = [
+        'festival', [
+            "credits.locked",
+            "eliminator.unlocked",
+            "medals",
+            "player.points",
+            "rank",
+            "speed.unlocked",
+            "trophy",
+            "wins"
+            ],
+
+        'garage', [
+            "character.name",
+            "avail",
+            "collectionset",
+            "dlc",
+            "unlocked",
+            "wins",
+            "vehicleunlocks"
+            ],
+
+        'global', [
+            "4playercompleted",
+            "barrelroll",
+            "boostexplosionwins",
+            "boostfreewins",
+            "devghostsbeaten",
+            "distancetravelled",
+            "dlcdevghostsonetrackbeaten",
+            "freeplayraceswon",
+            "heavyweightwins",
+            "knockoffattacks",
+            "lightweightwins",
+            "longestjump",
+            "maxpunchesduringvictory",
+            "mediumweightwins",
+            "ms1_save_detected",
+            "nummicrobadges",
+            "numstdraces",
+            "numwins",
+            "numwrecks",
+            "successfulattacks",
+            "surviourcount",
+            "tightestvictory",
+            "totalracetime300ths",
+            "totalracetime",
+            "xxxfilth"
+            ],
+
+        'online', [
+            "ranked.golds",
+            "ranked.silvers",
+            "ranked.bronzes",
+            "ranked.playersbeaten",
+            "ranked.longwinningstreak",
+            "ranked.victories",
+            "ranked.gamesplayed",
+            "ranked.ranking",
+            "ranked.xp",
+            "casualgamesplayed",
+            "customgamesplayed",
+            "dropout",
+            "locationid",
+            "globalgame",
+            ],
+
+        'options', [
+            "optionsprogress",
+            "optionsprogress2",
+            "optionsprogress3"
+            ],
+
+        'rewards', [
+            "rewardsprogress",
+            "rewardsprogress2",
+            "rewardsprogress3"
+            ],
+
+        'ticket', [
+            "ticketprogress",
+            "ticketprogress2",
+            "ticketprogress3"
+            ],
+
+        'track', [
+            "trackprogress",
+            "trackprogress2",
+            "trackprogress3"
+            ],
+
+        'vehiclelams', [
+            "racetruck00",
+            "rallycar00"
+            ]
+    ]
+
+    key_keeper(file_path, chunk_name, allowed_key_snippets)
+
+
+def key_keeper(file_path, chunk_name, allowed_key_snippets):
+    # Keeps keys from the save based on the chunk names and allowed key
+    # snippets provided. All other keys are removed.
+    
+    inside_chunk = False
+
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+    with open(file_path, 'w') as file:
+        for line in lines:
+            if chunk_name in line:
+                inside_chunk = True
+                file.write(line + '\n')
+            elif '</Chunk>' in line and inside_chunk:
+                file.write('\n')
+                inside_chunk = False
+
+            if inside_chunk:
+                for key in allowed_key_snippets:
+                    if key in line:
+                        file.write(line)
+                        break
+            else:
+                file.write(line)
+
+
+def stat_adjuster(file_path, game_version):
+    # Adjusts stats in the save based on the game version if uncorruption
+    # method 3 is selected.
+    pass
+
+
 def main():
 
     print("\033[94m\n╔═════════════════════════════════╗\n"
@@ -104,7 +242,8 @@ def main():
     getch() # 'Press any key' functionality
 
     root = tk.Tk()
-    root.withdraw()
+    #root.withdraw()   # Hide the root window UNCOMMENT IN FINAL
+    root.attributes('-alpha', 0)  # REMOVE THIS LINE IN FINAL
 
     file_path = filedialog.askopenfilename(
         filetypes=[("AUTOSAVE.DAT", "*.DAT"), ("All Files" , "*")],
@@ -117,35 +256,30 @@ def main():
     player_name = get_player_name(file_path)
 
     if game_version != None and player_name != None:
-        print(
-            "\nDetected save '" + str(player_name) + "' on version",
-              str(game_version) + "."
-              )
+        print("\nDetected save '" + str(player_name) + "' on version",
+              str(game_version) + ".")
     elif game_version != None and player_name == None:
-        print(
-            "\nDetected save on version", str(game_version) + "."
-            )
+        print("\nDetected save on version", str(game_version) + ".")
     elif game_version == 'Unknown':
-        print(
-            "\033[91m\nERROR: Detected unknown game version! The program "
-              "cannot continue and will now exit."
-            )
+        print("\033[91m\nERROR: Detected unknown game version! The program "
+              "cannot continue and will now exit.")
         exit()
     else:  # game_version == None
-        print(
-            "\033[91m\nERROR: Could not detect game version! The program "
-              "cannot continue and will now exit."
-            )
+        print("\033[91m\nERROR: Could not detect game version! The program "
+              "cannot continue and will now exit.")
         exit()
 
     method_choice = select_uncorruption_method()
-
-    method_choice = 1 # For safety as other methods are not fully implemented yet.
     
     chunk_keeper(file_path, game_version, method_choice)
 
+    key_remover_base(file_path, game_version, method_choice)
+
+    if method_choice == '3':
+        stat_adjuster(file_path, game_version)
+
     print("\nSave uncorrupted successfully! Press any key to exit.")
-    getch()
+    #getch()
 
 if __name__ == "__main__":
     main()
