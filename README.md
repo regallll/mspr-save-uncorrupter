@@ -18,7 +18,7 @@ You may also notice faster loading times in some cases.
 
 ### Executable
 
-Get the [latest MSPR_Save_Uncorrupter.exe executable from the Releases page](https://github.com/regallll/mspr-save-uncorrupter/releases/latest) and run it.
+Get the [latest MSPR_Save_Uncorrupter.exe executable](https://github.com/regallll/mspr-save-uncorrupter/releases/latest) from the [Releases](https://github.com/regallll/mspr-save-uncorrupter/releases) page and run it.
 
 ### Or, if running from source:
 Clone the repository and run:
