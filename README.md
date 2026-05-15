@@ -14,7 +14,7 @@ You may also notice faster loading times in some cases.
 
 ## Usage
 
-> ## **Important:** This tool is still a work in progress. Method 1, which handles the majority of cases, is functional, but Methods 2 and 3 are not yet fully implemented. **Always back up your save first.**
+### Always back up your save first.
 
 ### Executable
 
@@ -32,4 +32,4 @@ Either here on GitHub, or ask for help on the [MotorStorm Modding Discord server
 
 ## License
 
-This project is licensed under the **[GNU Affero General Public License v3 (AGPLv3)](LICENSE)**.
+This project is licensed under the [GNU Affero General Public License v3 (AGPLv3)](LICENSE).
